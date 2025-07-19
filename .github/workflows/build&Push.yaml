@@ -41,7 +41,9 @@ jobs:
           else
             echo "skip_build=false" >> $GITHUB_OUTPUT
           fi
-
+      - name: debugging
+        run: |
+            ls -ltra
       - name: 🛠️ Build & Push Docker image
         if: steps.changes.outputs.skip_build == 'false'
         uses: docker/build-push-action@v5
