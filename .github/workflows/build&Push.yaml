@@ -1,56 +1,67 @@
-name: Build & Push Docker Images to Docker Hub
+name: Build & Push Docker Images
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
     paths:
       - 'frontend/**'
       - 'backend/**'
       - '.github/workflows/**'
 
 jobs:
-  build-and-push:
+  frontend:
+    name: 🚀 Build & Push Frontend
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        component: [frontend, backend]
-
+    if: ${{ contains(github.event.head_commit.message, 'frontend') || github.event_name == 'push' }}
     steps:
-      - name: ⬇️ Checkout code
+      - name: 📥 Checkout repo
         uses: actions/checkout@v3
 
-      - name: 🧠 Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: 🔑 Log in to Docker Hub
+      - name: 🔑 Login to DockerHub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: 📛 Get short commit SHA
+      - name: 🏷️ Get short commit SHA
         id: vars
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-      - name: 🔍 Check for changes in ${{ matrix.component }}
-        id: changes
-        run: |
-          if git diff --quiet HEAD~1 -- ${{ matrix.component }}; then
-            echo "skip_build=true" >> $GITHUB_OUTPUT
-          else
-            echo "skip_build=false" >> $GITHUB_OUTPUT
-          fi
-      - name: debugging
-        run: |
-            ls -ltra
-      - name: 🛠️ Build & Push Docker image
-        if: steps.changes.outputs.skip_build == 'false'
+      - name: 🛠️ Build and push Frontend Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./${{ matrix.component }}
-          file: ./${{ matrix.component }}/Dockerfile
+          context: ./frontend
+          file: ./frontend/Dockerfile
           push: true
           tags: |
-            akshunsinha/itransition:${{ matrix.component }}
-            akshunsinha/itransition:${{ matrix.component }}-${{ steps.vars.outputs.sha_short }}
+            akshunsinha/itransition:frontend
+            akshunsinha/itransition:frontend-${{ steps.vars.outputs.sha_short }}
+
+  backend:
+    name: 🛠️ Build & Push Backend
+    runs-on: ubuntu-latest
+    if: ${{ contains(github.event.head_commit.message, 'backend') || github.event_name == 'push' }}
+    steps:
+      - name: 📥 Checkout repo
+        uses: actions/checkout@v3
+
+      - name: 🔑 Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: 🏷️ Get short commit SHA
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: 🛠️ Build and push Backend Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: |
+            akshunsinha/itransition:backend
+            akshunsinha/itransition:backend-${{ steps.vars.outputs.sha_short }}
