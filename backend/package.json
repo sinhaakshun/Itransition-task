@@ -3,9 +3,15 @@
   "version": "1.0.0",
   "main": "dist/server.js",
   "scripts": {
+<<<<<<< HEAD
     "start": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
     "dev": "node dist/server.js"
+=======
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
+>>>>>>> f68d070327ae9ecded95bf03d1df9e0d9644c684
   },
   "dependencies": {
     "class-transformer": "^0.5.1",
