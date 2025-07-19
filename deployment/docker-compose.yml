@@ -19,7 +19,7 @@ services:
       - app-network
 
   backend:
-    image: react-node-backend:latest
+    image: akshunsinha/itransition:backend
     container_name: backend
     restart: unless-stopped
     environment:
@@ -36,7 +36,7 @@ services:
       - app-network
 
   frontend:
-    image: react-node-frontend:latest
+    image: akshunsinha/itransition:frontend
     container_name: frontend
     restart: unless-stopped
     # entrypoint: ["bash"]
