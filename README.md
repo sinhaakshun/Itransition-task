@@ -121,8 +121,8 @@ CREATE TABLE drugs (
 PORT=3100
 DB_HOST=localhost
 DB_PORT=3306
-DB_USER=druguser
-DB_PASSWORD=drugpass
+DB_USER=youruser
+DB_PASSWORD=yourpassword
 DB_NAME=drugs_db
 ```
 
