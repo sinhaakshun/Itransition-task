@@ -1,0 +1,12 @@
+CREATE DATABASE IF NOT EXISTS drugs_db;
+
+USE drugs_db;
+
+CREATE TABLE IF NOT EXISTS drugs (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  code VARCHAR(255),
+  genericName VARCHAR(255),
+  brandName VARCHAR(255),
+  company VARCHAR(255),
+  launchDate VARCHAR(255)
+);
